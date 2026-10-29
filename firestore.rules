@@ -1,0 +1,40 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /rooms/{roomId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.resource.data.host == request.auth.uid
+        && request.resource.data.phase == 'lobby'
+        && request.resource.data.round == 0
+        && request.resource.data.seconds in [30,60,90]
+        && request.resource.data.history == [];
+      allow update: if request.auth != null
+        && resource.data.host == request.auth.uid
+        && request.resource.data.host == resource.data.host
+        && request.resource.data.seconds == resource.data.seconds
+        && request.resource.data.round >= resource.data.round
+        && request.resource.data.phase in ['lobby','writing','reveal','won'];
+      allow delete: if false;
+      match /players/{playerId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null && request.auth.uid == playerId
+          && get(/databases/$(database)/documents/rooms/$(roomId)).data.phase == 'lobby'
+          && request.resource.data.name is string
+          && request.resource.data.name.size() > 0
+          && request.resource.data.name.size() <= 16
+          && request.resource.data.word == ''
+          && request.resource.data.round == 0;
+        allow update: if request.auth != null && request.auth.uid == playerId
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['word','round'])
+          && get(/databases/$(database)/documents/rooms/$(roomId)).data.phase == 'writing'
+          && request.resource.data.round == get(/databases/$(database)/documents/rooms/$(roomId)).data.round
+          && resource.data.round < request.resource.data.round
+          && request.resource.data.word is string
+          && request.resource.data.word.size() > 0
+          && request.resource.data.word.size() <= 30;
+        allow delete: if false;
+      }
+    }
+  }
+}
