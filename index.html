@@ -3,7 +3,7 @@ import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase
 import {getAuth,signInAnonymously,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 import {getFirestore,doc,getDoc,setDoc,updateDoc,onSnapshot,runTransaction,serverTimestamp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 // ↓ 從 Firebase 專案設定 > 你的應用程式 > 網頁應用程式複製設定，取代下方內容
-const firebaseConfig={apiKey:'PASTE_API_KEY',authDomain:'PASTE_PROJECT_ID.firebaseapp.com',projectId:'PASTE_PROJECT_ID',appId:'PASTE_APP_ID'};
+const firebaseConfig={apiKey:'AIzaSyBqq0VFDy85zKv-F0ZAC-zTuZd1VWQiDOU',authDomain:'same-word-game-4d4bd.firebaseapp.com',projectId:'same-word-game-4d4bd',storageBucket:'same-word-game-4d4bd.firebasestorage.app',messagingSenderId:'1047250836216',appId:'1:1047250836216:web:554d0953a34ecb113c790d'};
 const $=id=>document.getElementById(id), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const msg=s=>$('msg').textContent=s||'';const params=new URLSearchParams(location.search);$('code').value=(params.get('room')||'').toUpperCase();
 if(firebaseConfig.apiKey==='PASTE_API_KEY'){msg('請先完成 Firebase 設定。');throw Error('Firebase 尚未設定')}
